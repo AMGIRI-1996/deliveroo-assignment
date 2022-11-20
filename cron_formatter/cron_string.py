@@ -8,7 +8,7 @@ class CronString():
         self.day_of_month = number_list.NumberList(1,31)
         self.month = number_list.NumberList(1,12)
         self.day_of_week = number_list.NumberList(0,7)
-        self.isValid = True
+        self.is_valid = True
 
         self.initialize()
 
@@ -18,38 +18,18 @@ class CronString():
             splitted_string.remove(" ")
 
         if len(splitted_string) != 6:
-            self.isValid = False
-            self.error = "There must be 6 args"
+            self.setError("There must be 6 args")
             return
 
         [minute_string, hour_string, day_of_month_string, month_string, day_of_week_string, self.command] = splitted_string
-        if not self.minute.initialize(minute_string):
-            self.isValid = False
-            self.error = "Error in minute format"
-            return
-        
-        if not self.hour.initialize(hour_string):
-            self.isValid = False
-            self.error = "Error in hour format"
-            return
-        
-        if not self.day_of_month.initialize(day_of_month_string):
-            self.isValid = False
-            self.error = "Error in day_of_month format"
-            return
-        
-        if not self.month.initialize(month_string):
-            self.isValid = False
-            self.error = "Error in month format"
-            return
-        
-        if not self.day_of_week.initialize(day_of_week_string):
-            self.isValid = False
-            self.error = "Error in day_of_week format"
-            return
+        self.minute.initialize(minute_string)
+        self.hour.initialize(hour_string)
+        self.day_of_month.initialize(day_of_month_string)
+        self.month.initialize(month_string)
+        self.day_of_week.initialize(day_of_week_string)  
 
     def getDetails(self):
-        if self.isValid:
+        if self.is_valid:
             print("minute\t{}".format(self.minute.getNumberList()))
             print("hour\t{}".format(self.hour.getNumberList()))
             print("day_of_month\t{}".format(self.day_of_month.getNumberList()))
@@ -58,4 +38,30 @@ class CronString():
             print("command\t{}".format(self.command))
         else:
             print("Not a valid string")
-            print(self.error)
+            print(self.getError())
+
+    def setError(self, description):
+        self.is_valid = False
+        self.error = description
+    
+    def isValid(self):
+        if self.is_valid:
+            if not self.minute.isValid():
+                self.setError("Error in minute format")
+
+            elif not self.hour.isValid():
+                self.setError("Error in hour format")
+
+            elif not self.day_of_month.isValid():
+                self.setError("Error in day_of_month format")
+
+            elif not self.month.isValid():
+                self.setError("Error in month format")
+
+            elif not self.day_of_week.isValid():
+                self.setError( "Error in day_of_week format")
+
+        return self.is_valid
+    
+    def getError(self):
+        return self.error

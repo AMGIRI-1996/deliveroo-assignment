@@ -4,6 +4,7 @@ class NumberList():
         self.start = start
         self.end = end
         self.numbers = set()
+        self.is_valid = True
     
     def initialize(self, raw_string):
         try: 
@@ -12,10 +13,8 @@ class NumberList():
                 self.addNumbersToList(number_range)
         except Exception as e:
             print(e)
-            return False
-        else:
-            return True
-        
+            self.setError(e)
+
     def addNumbersToList(self,number_range):
         stepper_split = number_range.split("/")
         if len(stepper_split) == 2:
@@ -38,9 +37,17 @@ class NumberList():
         
         for i in range(first_number, last_number+1, stepper):
             self.numbers.add(i)
-        
-        return True
-    
+
     def getNumberList(self):
         return sorted(self.numbers)
+    
+    def setError(self, description):
+        self.is_valid = False
+        self.error = description
+    
+    def isValid(self):
+        return self.is_valid
+
+    def getError(self):
+        return self.error
     
